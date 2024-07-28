@@ -16,7 +16,7 @@ cd $GITHUB_REPO_DIR
 
 # Pull Docker images and start services with Docker Compose
 sudo docker-compose pull
-sudo docker-compose up -d
+sudo docker-compose up
 
 # Wait for the load generator to finish
 sleep 3600  # Adjust based on the expected run time
