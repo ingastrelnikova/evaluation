@@ -93,10 +93,13 @@ def calculate_max_deletions_to_degrade(equivalence_class_counts):
     return total_deletions + 1
 
 # Method to log read transactions
-def log_read_transaction(start_time, end_time, duration, record_count, tps, latency):
+def log_read_transaction(start_time, end_time, duration, record_count, tps, latency, metrics_latency):
     with open(LOG_CSV_PATH, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([start_time, end_time, duration, record_count, tps, latency])
+        writer.writerow([start_time, end_time, duration, record_count, tps, latency, metrics_latency])
+
+def format_timestamp(ts):
+    return ts.strftime('%Y-%m-%d %H:%M:%S.%f') + ' +0000 UTC m=+' + str(ts.second) + '.' + str(ts.microsecond).zfill(6)
 
 def main():
     iteration = 0
@@ -107,21 +110,21 @@ def main():
     if not os.path.exists(LOG_CSV_PATH):
         with open(LOG_CSV_PATH, mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(['start_time', 'end_time', 'duration_seconds', 'record_count', 'transactions_per_second', 'latency_ms'])
+            writer.writerow(['start_time', 'end_time', 'duration_seconds', 'record_count', 'transactions_per_second', 'latency_ms', 'metrics_latency_ms'])
 
     # Server start to expose the metrics
     start_http_server(9290)
     sys.stdout.flush()
-    while True:
-        print(f"Iteration {iteration}")
+    while iteration < 100:
+        print(f"Iteration {iteration + 1}")
         sys.stdout.flush()
         iteration += 1
         conn = connect_to_db()
         if conn:
             start_time = pd.Timestamp.now()
             records = fetch_data(conn)
-            end_time = pd.Timestamp.now()
-            duration = (end_time - start_time).total_seconds()
+            fetch_end_time = pd.Timestamp.now()
+            duration = (fetch_end_time - start_time).total_seconds()
             latency = duration * 1000  # Convert to milliseconds
             record_count = len(records)
             tps = record_count / duration if duration > 0 else 0
@@ -130,6 +133,7 @@ def main():
                 df = pd.DataFrame(records, columns=['zip_code', 'gender'])
 
                 if not df.empty:
+                    metrics_start_time = pd.Timestamp.now()
                     k_anonymity_value, num_records = calculate_k_anonymity(df)
 
                     latest_k_value = k_anonymity_value
@@ -140,9 +144,12 @@ def main():
 
                     anonymity_sets_counts = calculate_anonymity_sets(df)
                     max_deletions_to_degrade = calculate_max_deletions_to_degrade(anonymity_sets_counts)
+                    metrics_end_time = pd.Timestamp.now()
+                    metrics_duration = (metrics_end_time - metrics_start_time).total_seconds()
+                    metrics_latency = metrics_duration * 1000  # Convert to milliseconds
 
                     # Print metrics for debugging
-                    print(f"Collected Metrics: k-anonymity: {latest_k_value}, data volume: {latest_volume_value}, k/volume ratio: {k_volume_ratio}, k-anonymity fluctuation rate: {k_anonymity_fluctuation_rate}, max deletions to degrade: {max_deletions_to_degrade}")
+                    print(f"Collected Metrics: k-anonymity: {latest_k_value}, data volume: {latest_volume_value}, k/volume ratio: {k_volume_ratio}, k-anonymity fluctuation rate: {k_anonymity_fluctuation_rate}, max deletions to degrade: {max_deletions_to_degrade}, metrics latency: {metrics_latency} ms")
                     sys.stdout.flush()
 
                     # Update Prometheus
@@ -177,11 +184,14 @@ def main():
                 AVG_K_ANONYMITY_GAUGE.set(0)
                 K_ANONYMITY_FLUCTUATION_RATE.set(0)
                 MAX_DELETIONS_TO_DEGRADE.set(0)
+                metrics_latency = 0
                 sys.stdout.flush()
                 print("no records")
 
             # Log read transaction
-            log_read_transaction(start_time, end_time, duration, record_count, tps, latency)
+            start_time_str = format_timestamp(start_time)
+            fetch_end_time_str = format_timestamp(fetch_end_time)
+            log_read_transaction(start_time_str, fetch_end_time_str, duration, record_count, tps, latency, metrics_latency)
 
             conn.close()
             sys.stdout.flush()

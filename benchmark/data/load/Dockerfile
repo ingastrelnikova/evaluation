@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "load_gen_100.py"]
+CMD ["python", "load_gen.py"]

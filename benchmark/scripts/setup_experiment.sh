@@ -1,47 +1,35 @@
 #!/bin/bash
 
-# Pull the Docker images
-docker pull postgres:13
-docker pull your-dockerhub-username/loadgen:latest
+# Define variables
+GITHUB_REPO_DIR="/home/ingastrelnikova28/app/benchmark/data"
+LOG_FILE_PATH="$GITHUB_REPO_DIR/write_log.csv"
+COMPLETION_FILE="/home/ingastrelnikova28/experiment_complete.txt"
 
-# Create a network for the containers
-docker network create loadgen-network
+# Ensure Docker Compose is installed
+if ! [ -x "$(command -v docker-compose)" ]; then
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+fi
 
-# Run PostgreSQL container
-docker run -d --name postgres-db --network loadgen-network \
-  -e POSTGRES_DB=research \
-  -e POSTGRES_USER=test \
-  -e POSTGRES_PASSWORD=test \
-  -v pgdata:/var/lib/postgresql/data \
-  postgres:13
+# Navigate to the GitHub repo directory
+cd $GITHUB_REPO_DIR
 
-# Wait for PostgreSQL to initialize
-sleep 10
-
-# Run Load Generator container
-docker run -d --name loadgen --network loadgen-network \
-  -e DB_HOST=postgres-db \
-  -e DB_PORT=5432 \
-  -e DB_NAME=research \
-  -e DB_USER=test \
-  -e DB_PASSWORD=test \
-  -e CSV_DIR_PATH=/app/anonymized_patients/10000 \
-  -e LOG_CSV_PATH=/app/write_log.csv \
-  -v /path/to/your/local/csv/files:/app/anonymized_patients \
-  your-dockerhub-username/loadgen:latest
+# Pull Docker images and start services with Docker Compose
+sudo docker-compose pull
+sudo docker-compose up -d
 
 # Wait for the load generator to finish
 sleep 3600  # Adjust based on the expected run time
 
 # Copy the log file from the load generator container to the host
-docker cp loadgen:/app/write_log.csv /home/$USER/write_log.csv
+LOADGEN_CONTAINER=$(sudo docker-compose ps -q loadgen)
+sudo docker cp $LOADGEN_CONTAINER:/app/write_log.csv $LOG_FILE_PATH
 
-# Stop and remove the containers
-docker stop loadgen postgres-db
-docker rm loadgen postgres-db
+# Stop and remove Docker containers
+sudo docker-compose down
 
-# Remove the Docker network
-docker network rm loadgen-network
+# Create a completion file to indicate the experiment has finished
+touch $COMPLETION_FILE
 
-# Upload the log file to Google Cloud Storage
-sudo gsutil cp /home/$USER/write_log.csv gs://your-bucket-name/write_log.csv
+echo "Experiment setup and execution completed."
+echo "Log file copied to: $LOG_FILE_PATH"
