@@ -1,0 +1,29 @@
+
+services:
+  metrics:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=5432
+      - DB_NAME=research
+      - DB_USER=test
+      - DB_PASSWORD=test
+      - LOG_CSV_PATH=/app/read_log.csv
+    volumes:
+      - .:/app
+    networks:
+      - metrics-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - metrics-network
+
+networks:
+  metrics-network:

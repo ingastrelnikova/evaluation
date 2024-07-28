@@ -4,8 +4,8 @@
 VM_USER="ingastrelnikova28"
 VM_NAME="db-vm"
 ZONE="europe-west10-a"
-LOCAL_LOG_DIR="./logs"           # The directory on your local machine to save the logs
-REMOTE_LOG_FILE="/home/$VM_USER/app/benchmark/data/write_log.csv"
+LOCAL_LOG_DIR="./logs"
+REMOTE_LOG_FILE="/home/$VM_USER/app/benchmark_writing_db/data/write_log.csv"
 REMOTE_COMPLETION_FILE="/home/$VM_USER/experiment_complete.txt"
 
 # Create the local log directory if it doesn't exist
