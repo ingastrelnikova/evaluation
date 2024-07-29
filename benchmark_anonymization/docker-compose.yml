@@ -18,14 +18,6 @@ services:
     networks:
       - load-gen
 
-  loadgen:
-    build:
-      context: ./load
-      dockerfile: Dockerfile
-    depends_on:
-      - research
-    networks:
-      - load-gen
 
 networks:
   load-gen:

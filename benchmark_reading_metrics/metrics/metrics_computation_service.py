@@ -40,11 +40,11 @@ def connect_to_db():
             host=host,
             port=port
         )
-        # print("Connected")
+        print("Connected")
         sys.stdout.flush()
         return conn
     except psycopg2.Error as e:
-        # print(f"Error: {e}")
+        print(f"Error: {e}")
         sys.stdout.flush()
         return None
 
@@ -115,7 +115,7 @@ def main():
     # Server start to expose the metrics
     start_http_server(9290)
     sys.stdout.flush()
-    while iteration < 100:
+    while iteration < 500:
         print(f"Iteration {iteration + 1}")
         sys.stdout.flush()
         iteration += 1
