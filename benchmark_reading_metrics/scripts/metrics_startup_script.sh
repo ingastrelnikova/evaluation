@@ -20,10 +20,9 @@ git clone https://github.com/ingastrelnikova/evaluation.git /home/ingastrelnikov
 
 # Wait for DB/Load Generator VM to be ready and get its IP
 sleep 60
-DB_LOADGEN_VM_IP=$(gcloud compute instances describe db-load-vm --zone=europe-west10-a --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+DB_LOADGEN_VM_INTERNAL_IP=$(gcloud compute instances describe db-load-vm --zone=europe-west10-a --format='get(networkInterfaces[0].networkIP)')
 
-# Update the docker-compose.yml file with the DB IP
-sed -i.bak "s/DB_HOST:.*/DB_HOST: $DB_LOADGEN_VM_IP/" /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics/docker-compose.yml
+export DB_HOST=$DB_LOADGEN_VM_INTERNAL_IP
 
 ## Run Docker Compose
 #cd /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics
