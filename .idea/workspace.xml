@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b11daba2-67f2-44e3-8852-40fd162af3a6" name="Changes" comment="" />
+    <list default="true" id="b11daba2-67f2-44e3-8852-40fd162af3a6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/AnonymizationService/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/1_create_vms.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/2_run_anon.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/2_run_db.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/anon_startup_script.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/db_startup_script.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/setup_anon.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/benchmark_anonymization/scripts/setup_db.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark_anonymization/AnonymizationService/src/main/java/example/service/AnonymizationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/benchmark_anonymization/AnonymizationService/src/main/java/example/service/AnonymizationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark_anonymization/db/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/benchmark_anonymization/db/init/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark_anonymization/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/benchmark_anonymization/db/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark_anonymization/load/anonymize.sh" beforeDir="false" afterPath="$PROJECT_DIR$/benchmark_anonymization/load/anonymize.sh" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,10 +49,11 @@
       <recent name="$PROJECT_DIR$/benchmark_reading_metrics" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/benchmark_anonymization/db/init" />
+      <recent name="$PROJECT_DIR$/benchmark_anonymization/db" />
       <recent name="$PROJECT_DIR$/benchmark_anonymization/load/json_data/10000" />
       <recent name="$PROJECT_DIR$/benchmark_anonymization/load/json_data/1000" />
       <recent name="$PROJECT_DIR$/benchmark_anonymization/load/json_data/100" />
-      <recent name="$PROJECT_DIR$/benchmark_reading_metrics" />
     </key>
   </component>
   <component name="RunManager">
@@ -56,7 +71,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1722203125758</updated>
-      <workItem from="1722203126851" duration="17699000" />
+      <workItem from="1722203126851" duration="23335000" />
     </task>
     <servers />
   </component>
