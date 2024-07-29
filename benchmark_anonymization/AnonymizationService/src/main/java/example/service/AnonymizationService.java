@@ -12,9 +12,12 @@ import org.deidentifier.arx.aggregates.HierarchyBuilderDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -24,6 +27,8 @@ public class AnonymizationService {
     private AnonymizedPatientRepository anonymizedPatientRepository;
 
     private static final String LOG_CSV_PATH = "anonymization_log.csv";
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")
+            .withZone(ZoneId.of("UTC"));
 
     @Transactional
     public void deletePatientsByIds(List<Long> patientIds) {
@@ -47,31 +52,31 @@ public class AnonymizationService {
         config.addPrivacyModel(new KAnonymity(k));
         config.setSuppressionLimit(0d);
 
-        long startAnonymizationTime = System.currentTimeMillis();
+        Instant startAnonymizationTime = Instant.now();
 
         try {
             ARXResult result = anonymizer.anonymize(data, config);
             DataHandle handle = result.getOutput(false);
 
-            long endAnonymizationTime = System.currentTimeMillis();
-            long anonymizationLatency = endAnonymizationTime - startAnonymizationTime;
+            Instant endAnonymizationTime = Instant.now();
+            long anonymizationLatency = endAnonymizationTime.toEpochMilli() - startAnonymizationTime.toEpochMilli();
 
             if (handle == null) {
-                logLatency(anonymizationLatency, recordCount, "anonymization");
+                logLatency(startAnonymizationTime, endAnonymizationTime, anonymizationLatency, recordCount, "anonymization");
                 return new ArrayList<>();
             }
 
             List<AnonymizedPatientDto> anonymizedPatients = createAnonymizedPatientsList(handle);
 
-            long startSavingTime = System.currentTimeMillis();
+            Instant startSavingTime = Instant.now();
 
             saveAnonymizedPatients(anonymizedPatients);
 
-            long endSavingTime = System.currentTimeMillis();
-            long savingLatency = endSavingTime - startSavingTime;
+            Instant endSavingTime = Instant.now();
+            long savingLatency = endSavingTime.toEpochMilli() - startSavingTime.toEpochMilli();
 
-            logLatency(anonymizationLatency, recordCount, "anonymization");
-            logLatency(savingLatency, recordCount, "saving");
+            logLatency(startAnonymizationTime, endAnonymizationTime, anonymizationLatency, recordCount, "anonymization");
+            logLatency(startSavingTime, endSavingTime, savingLatency, recordCount, "saving");
 
             return anonymizedPatients;
         } catch (Exception e) {
@@ -181,15 +186,19 @@ public class AnonymizationService {
         anonymizedPatientRepository.saveAll(anonymizedPatients);
     }
 
-    private void logLatency(long latency, int recordCount, String operation) {
+    private void logLatency(Instant startTime, Instant endTime, long latency, int recordCount, String operation) {
         try (FileWriter writer = new FileWriter(LOG_CSV_PATH, true)) {
-            writer.append(String.join(",", Arrays.asList(
-                    Long.toString(System.currentTimeMillis()),
+            // Check if the file exists and is empty, if so, write the header
+            File logFile = new File(LOG_CSV_PATH);
+            if (logFile.length() == 0) {
+                writer.append("startTime,endTime,latency,operation,recordCount\n");
+            }
+            writer.append(String.format("%s,%s,%.3f,%s,%d\n",
+                    formatter.format(startTime),
+                    formatter.format(endTime),
+                    latency / 1000.0,
                     operation,
-                    Long.toString(latency),
-                    Integer.toString(recordCount)
-            )));
-            writer.append("\n");
+                    recordCount));
         } catch (IOException e) {
             e.printStackTrace();
         }
