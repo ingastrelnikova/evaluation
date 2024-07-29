@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define variables
-GITHUB_REPO_DIR="/home/ingastrelnikova28/app/benchmark/data"
+GITHUB_REPO_DIR="/home/ingastrelnikova28/app/benchmark_reading_metrics/data"
 LOG_FILE_PATH="$GITHUB_REPO_DIR/write_log.csv"
 COMPLETION_FILE="/home/ingastrelnikova28/experiment_complete.txt"
 
