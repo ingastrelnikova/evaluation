@@ -62,7 +62,7 @@ gcloud compute ssh $VM_USER@$DB_LOADGEN_VM_NAME --zone=$ZONE --command="cd $REMO
 DB_LOADGEN_VM_IP=$(gcloud compute instances describe $DB_LOADGEN_VM_NAME --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
 
 # Update environment variable for the Metrics Collector's docker-compose.yml
-gcloud compute ssh $VM_USER@$METRICS_VM_NAME --zone=$ZONE --command="git clone $GITHUB_REPO_METRICS $REMOTE_METRICS_CODE_DIR && sed -i.bak 's/DB_HOST:.*/DB_HOST: $DB_LOADGEN_VM_IP/' $REMOTE_METRICS_CODE_DIR/docker-compose.yml"
+gcloud compute ssh $VM_USER@$METRICS_VM_NAME --zone=$ZONE --command="git clone $GITHUB_REPO_METRICS /home/ingastrelnikova28/app && sed -i.bak 's/DB_HOST:.*/DB_HOST: $DB_LOADGEN_VM_IP/' $REMOTE_METRICS_CODE_DIR/docker-compose.yml"
 
 # Run Docker Compose on the Metrics Collector VM
 gcloud compute ssh $VM_USER@$METRICS_VM_NAME --zone=$ZONE --command="cd $REMOTE_METRICS_CODE_DIR && docker-compose up -d"
