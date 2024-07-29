@@ -9,6 +9,8 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   sudo chmod +x /usr/local/bin/docker-compose
 fi
 
+# Navigate to the GitHub repo directory
+cd $GITHUB_REPO_DIR
 
 DB_HOST=$(gcloud compute instances describe anon-db --zone=europe-west10-a --format='get(networkInterfaces[0].networkIP)')
 
@@ -19,8 +21,15 @@ export SPRING_DATASOURCE_PASSWORD="test"
 
 echo "$SPRING_DATASOURCE_URL"
 
-# Navigate to the GitHub repo directory
-cd $GITHUB_REPO_DIR
+cat <<EOF > .env
+SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+EOF
+
+# Verify the .env file contents (for debugging)
+cat .env
+
 
 # Pull Docker images and start services with Docker Compose
 sudo docker-compose pull
