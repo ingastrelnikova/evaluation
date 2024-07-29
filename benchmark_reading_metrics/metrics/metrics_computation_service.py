@@ -115,7 +115,7 @@ def main():
     # Server start to expose the metrics
     start_http_server(9290)
     sys.stdout.flush()
-    while iteration < 500:
+    while iteration < 300:
         print(f"Iteration {iteration + 1}")
         sys.stdout.flush()
         iteration += 1

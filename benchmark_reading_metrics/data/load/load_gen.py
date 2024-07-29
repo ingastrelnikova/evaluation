@@ -67,7 +67,7 @@ def format_timestamp(ts):
     return ts.strftime('%Y-%m-%d %H:%M:%S.%f') + ' +0000 UTC m=+' + str(ts.second) + '.' + str(ts.microsecond).zfill(6)
 
 def perform_experiment(conn, csv_dir_path):
-    for i in range(5):  # Repeat 5 times
+    for i in range(10):  # Repeat 5 times
         csv_files = sorted(glob(os.path.join(csv_dir_path, '*.csv')))
         print(f"Found CSV files: {csv_files}")
         for csv_file in csv_files:
