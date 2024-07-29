@@ -6,7 +6,6 @@ LOG_FILE_PATH="$GITHUB_REPO_DIR/read_log.csv"
 COMPLETION_FILE="/home/ingastrelnikova28/metrics_complete.txt"
 DB_LOADGEN_VM_INTERNAL_IP=$(gcloud compute instances describe db-load-vm --zone=europe-west10-a --format='get(networkInterfaces[0].networkIP)')
 
-echo "$DB_LOADGEN_VM_INTERNAL_IP"
 
 touch /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics/.env
 
