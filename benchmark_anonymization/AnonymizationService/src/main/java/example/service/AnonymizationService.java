@@ -1,3 +1,5 @@
+package example.service;
+
 import example.dto.PatientDto;
 import example.dto.AnonymizedPatientDto;
 import example.entity.AnonymizedPatient;
