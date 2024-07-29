@@ -25,6 +25,6 @@ DB_LOADGEN_VM_IP=$(gcloud compute instances describe db-load-vm --zone=europe-we
 # Update the docker-compose.yml file with the DB IP
 sed -i.bak "s/DB_HOST:.*/DB_HOST: $DB_LOADGEN_VM_IP/" /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics/docker-compose.yml
 
-# Run Docker Compose
-cd /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics
-sudo docker-compose up -d
+## Run Docker Compose
+#cd /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics
+#sudo docker-compose up -d

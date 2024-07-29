@@ -40,12 +40,12 @@ sleep 60
 METRICS_VM_INTERNAL_IP=$(gcloud compute instances describe $METRICS_VM_NAME --zone=$ZONE --format='get(networkInterfaces[0].networkIP)')
 
 # Create a firewall rule to allow traffic on port 5432
-gcloud compute firewall-rules create allow-postgres-access \
-    --direction=INGRESS \
-    --priority=1000 \
-    --network=default \
-    --action=ALLOW \
-    --rules=tcp:5432 \
-    --source-ranges=$METRICS_VM_INTERNAL_IP/32
+#gcloud compute firewall-rules create allow-postgres-access \
+#    --direction=INGRESS \
+#    --priority=1000 \
+#    --network=default \
+#    --action=ALLOW \
+#    --rules=tcp:5432 \
+#    --source-ranges=$METRICS_VM_INTERNAL_IP/32
 
 echo "Firewall rule created to allow traffic on port 5432 from $METRICS_VM_INTERNAL_IP"
