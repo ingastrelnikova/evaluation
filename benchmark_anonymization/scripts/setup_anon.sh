@@ -17,6 +17,8 @@ export SPRING_DATASOURCE_URL="jdbc:postgresql://${DB_HOST}:5432/research"
 export SPRING_DATASOURCE_USERNAME="test"
 export SPRING_DATASOURCE_PASSWORD="test"
 
+echo "$SPRING_DATASOURCE_URL"
+
 # Navigate to the GitHub repo directory
 cd $GITHUB_REPO_DIR
 
