@@ -2,7 +2,7 @@
 
 # Define variables
 DB_LOADGEN_VM_NAME="db-load-vm"
-METRICS_VM_NAME="metrics-service-vm"
+METRICS_VM_NAME="metrics-collector-vm"
 ZONE="europe-west10-a"
 MACHINE_TYPE="e2-standard-4"
 IMAGE_FAMILY="ubuntu-2004-lts"
