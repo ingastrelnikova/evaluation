@@ -1,7 +1,11 @@
 #!/bin/bash
 
-BASE_JSON_DIR="json_data"
-URL="http://localhost:8083/anonymize/patients"
+# Get the directory where the script is located
+SCRIPT_DIR=$(dirname "$0")
+
+# Define the base directory for JSON data
+BASE_JSON_DIR="$SCRIPT_DIR/json_data"
+URL="http://localhost:8080/anonymize/patients"
 
 if [ ! -d "$BASE_JSON_DIR" ]; then
     echo "Directory $BASE_JSON_DIR does not exist."
@@ -21,7 +25,6 @@ for DIR in $BASE_JSON_DIR/*; do
                 sleep 30
             else
                 echo "No JSON files found in $DIR"
-                exit 1
             fi
         done
     fi
