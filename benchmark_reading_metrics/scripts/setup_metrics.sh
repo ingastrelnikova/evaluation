@@ -5,6 +5,10 @@ GITHUB_REPO_DIR="/home/ingastrelnikova28/app/benchmark_reading_metrics/metrics"
 LOG_FILE_PATH="$GITHUB_REPO_DIR/read_log.csv"
 COMPLETION_FILE="/home/ingastrelnikova28/metrics_complete.txt"
 
+DB_HOST=$(gcloud compute instances describe db-load-vm --zone=europe-west10-a --format='get(networkInterfaces[0].networkIP)')
+
+export DB_HOST
+
 # Ensure Docker Compose is installed
 if ! [ -x "$(command -v docker-compose)" ]; then
   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
