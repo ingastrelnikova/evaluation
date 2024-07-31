@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: test
       POSTGRES_DB: research
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - ./ResearchPostgres:/docker-entrypoint-initdb.d
     networks:
