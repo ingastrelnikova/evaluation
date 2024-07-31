@@ -67,7 +67,7 @@ def connect_to_db():
 def fetch_data(conn):
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT zip_code, gender FROM anonymized_patients;")
+        cursor.execute("SELECT zip_code, anonymized_date_of_birth FROM anonymized_patients;")
         rows = cursor.fetchall()
         sys.stdout.flush()
         return rows

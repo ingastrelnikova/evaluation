@@ -4,7 +4,7 @@ import psycopg2
 from psycopg2 import sql
 import os
 from glob import glob
-import pandas as pd
+import random
 
 # Environment variables
 DB_HOST = os.getenv('DB_HOST', 'research-db')
@@ -18,7 +18,6 @@ CSV_DIR_PATHS = [
     os.getenv('CSV_DIR_PATH_1000', '/app/anonymized_patients/1000'),
     os.getenv('CSV_DIR_PATH_100', '/app/anonymized_patients/100')
 ]
-LOG_CSV_PATH = os.getenv('LOG_CSV_PATH', '/app/write_log.csv')
 
 def create_connection():
     conn = psycopg2.connect(
@@ -40,11 +39,18 @@ def insert_data(conn, data):
         cursor.execute(query, data)
     conn.commit()
 
-def delete_all_data(conn):
-    query = sql.SQL("DELETE FROM anonymized_patients")
+def delete_data(conn, ids):
+    query = sql.SQL("DELETE FROM anonymized_patients WHERE id = ANY(%s)")
+    with conn.cursor() as cursor:
+        cursor.execute(query, (ids,))
+    conn.commit()
+
+def fetch_inserted_ids(conn):
+    query = sql.SQL("SELECT id FROM anonymized_patients")
     with conn.cursor() as cursor:
         cursor.execute(query)
-    conn.commit()
+        ids = [row[0] for row in cursor.fetchall()]
+    return ids
 
 def load_data_from_csv(csv_file_path):
     with open(csv_file_path, mode='r') as file:
@@ -58,60 +64,26 @@ def load_data_from_csv(csv_file_path):
                 row['zipcode']
             )
 
-def log_transaction(start_time, end_time, duration, record_count, tps, latency, transaction_type):
-    with open(LOG_CSV_PATH, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([start_time, end_time, duration, record_count, tps, latency, transaction_type])
-
-def format_timestamp(ts):
-    return ts.strftime('%Y-%m-%d %H:%M:%S.%f') + ' +0000 UTC m=+' + str(ts.second) + '.' + str(ts.microsecond).zfill(6)
-
 def perform_experiment(conn, csv_dir_path):
-    for i in range(10):  # Repeat 10 times
+    for i in range(5):  # Repeat  times
         csv_files = sorted(glob(os.path.join(csv_dir_path, '*.csv')))
         print(f"Found CSV files: {csv_files}")
         for csv_file in csv_files:
-            start_time = pd.Timestamp.now()
-            record_count = 0
             for data in load_data_from_csv(csv_file):
                 insert_data(conn, data)
-                record_count += 1
-            end_time = pd.Timestamp.now()
-            duration = (end_time - start_time).total_seconds()
-            tps = record_count / duration if duration > 0 else 0
-            latency = duration * 1000  # Convert to milliseconds
 
-            # Format timestamps
-            start_time_str = format_timestamp(start_time)
-            end_time_str = format_timestamp(end_time)
+            # Fetch inserted ids
+            inserted_ids = fetch_inserted_ids(conn)
+            half_count = len(inserted_ids) // 2
+            ids_to_delete = random.sample(inserted_ids, half_count)
 
-            log_transaction(start_time_str, end_time_str, duration, record_count, tps, latency, "insertion")
-            time.sleep(5)
-
-        # Perform deletion
-        start_time = pd.Timestamp.now()
-        delete_all_data(conn)
-        end_time = pd.Timestamp.now()
-        duration = (end_time - start_time).total_seconds()
-        tps = record_count / duration if duration > 0 else 0
-        latency = duration * 1000  # Convert to milliseconds
-
-        # Format timestamps
-        start_time_str = format_timestamp(start_time)
-        end_time_str = format_timestamp(end_time)
-
-        log_transaction(start_time_str, end_time_str, duration, record_count, tps, latency, "deletion")
+            # Perform deletion
+            delete_data(conn, ids_to_delete)
 
 def main():
     time.sleep(5)
     print("Waited for 5 seconds. Proceeding...")
     conn = create_connection()
-
-    # Initialize log CSV file
-    if not os.path.exists(LOG_CSV_PATH):
-        with open(LOG_CSV_PATH, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(['start_time', 'end_time', 'duration_seconds', 'record_count', 'transactions_per_second', 'latency_ms', 'transaction_type'])
 
     try:
         for csv_dir_path in CSV_DIR_PATHS:
