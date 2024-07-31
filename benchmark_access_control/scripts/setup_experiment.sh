@@ -18,5 +18,3 @@ sudo docker-compose up --build
 
 cd /home/ingastrelnikova28/app/benchmark_access_control/scripts
 
-sudo chmod +x send_requests.sh
-sudo ./send_requests.sh

@@ -9,11 +9,11 @@ import csv
 app = Flask(__name__)
 
 # Function to write latency data to CSV
-def log_latency(start_time, end_time, operation, result):
+def log_latency(start_time, end_time, operation, result, record_count=None):
     latency = (end_time - start_time) * 1000  # Convert to milliseconds
     with open('latencies.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([start_time, end_time, latency, operation, result])
+        writer.writerow([start_time, end_time, latency, operation, result, record_count])
 
 # Database connection
 def get_db_connection():
@@ -58,10 +58,11 @@ def get_data():
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM anonymized_patients;')
         rows = cursor.fetchall()
+        record_count = len(rows)
         cursor.close()
         conn.close()
         end_time = time.time()
-        log_latency(start_time, end_time, "data retrieval", result)
+        log_latency(start_time, end_time, "data retrieval", result, record_count)
         return jsonify(rows)
     except Exception as e:
         return str(e), 500
@@ -70,5 +71,5 @@ if __name__ == '__main__':
     # Ensure CSV file has a header
     with open('latencies.csv', mode='w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["start_time", "end_time", "latency_ms", "operation", "authorized"])
+        writer.writerow(["start_time", "end_time", "latency_ms", "operation", "authorized", "records"])
     app.run(debug=True, host='0.0.0.0', port=3002)
