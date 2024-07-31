@@ -82,13 +82,13 @@ def fetch_data(conn):
 
 # method to calculate k anonymity
 def calculate_k_anonymity(df):
-    unique_groups = df.groupby(['zip_code', 'gender']).size().reset_index(name='num_elements')
+    unique_groups = df.groupby(['zip_code', 'date_of_birth']).size().reset_index(name='num_elements')
     k_anonymity_value = unique_groups['num_elements'].min()
     return k_anonymity_value, len(df)
 
 # method to get the anonymity classes
 def calculate_anonymity_sets(df):
-    unique_groups = df.groupby(['zip_code', 'gender']).size().reset_index(name='num_elements')
+    unique_groups = df.groupby(['zip_code', 'date_of_birth']).size().reset_index(name='num_elements')
     anonymity_sets_counts = unique_groups['num_elements'].value_counts().reset_index()
     anonymity_sets_counts.columns = ['num_of_elements', 'num_of_classes']
     return anonymity_sets_counts
@@ -130,7 +130,7 @@ def main():
         if conn:
             records = fetch_data(conn)
             if records:
-                df = pd.DataFrame(records, columns=['zip_code', 'gender'])
+                df = pd.DataFrame(records, columns=['zip_code', 'date_of_birth'])
 
                 if not df.empty:
                     k_anonymity_value, num_records = calculate_k_anonymity(df)
