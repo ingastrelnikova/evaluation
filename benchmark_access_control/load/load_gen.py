@@ -40,13 +40,13 @@ def insert_data(conn, data):
     conn.commit()
 
 def delete_data(conn, ids):
-    query = sql.SQL("DELETE FROM anonymized_patients WHERE id = ANY(%s)")
+    query = sql.SQL("DELETE FROM anonymized_patients WHERE anonymized_id = ANY(%s)")
     with conn.cursor() as cursor:
         cursor.execute(query, (ids,))
     conn.commit()
 
 def fetch_inserted_ids(conn):
-    query = sql.SQL("SELECT id FROM anonymized_patients")
+    query = sql.SQL("SELECT anonymized_id FROM anonymized_patients")
     with conn.cursor() as cursor:
         cursor.execute(query)
         ids = [row[0] for row in cursor.fetchall()]
@@ -65,7 +65,6 @@ def load_data_from_csv(csv_file_path):
             )
 
 def perform_experiment(conn, csv_dir_path):
-    for i in range(5):  # Repeat  times
         csv_files = sorted(glob(os.path.join(csv_dir_path, '*.csv')))
         print(f"Found CSV files: {csv_files}")
         for csv_file in csv_files:
