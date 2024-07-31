@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Specify user
+USER="ingastrelnikova28"
+
 # Update the package list
 sudo apt-get update
 
@@ -21,17 +24,11 @@ sudo apt-get update
 sudo apt-get install -y docker-ce
 
 # Add user to the docker group
-sudo usermod -aG docker ingastrelnikova28
+sudo usermod -aG docker $USER
 
 # Install Docker Compose
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Clone GitHub repository
-git clone https://github.com/ingastrelnikova/evaluation.git /home/ingastrelnikova28/app
-
-# Change to the app directory
-cd /home/ingastrelnikova28/app
-
-## Run Docker Compose
-#sudo docker-compose up -d
+git clone https://github.com/ingastrelnikova/evaluation.git /home/$USER/app

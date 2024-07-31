@@ -67,7 +67,7 @@ def load_data_from_csv(csv_file_path):
 def perform_experiment(conn, csv_dir_path):
     for i in range(5):  # Repeat  times
         csv_files = sorted(glob(os.path.join(csv_dir_path, '*.csv')))
-        print(f"Found CSV files: {csv_files}")
+        print(f"Found CSVs: {csv_files}")
         for csv_file in csv_files:
             for data in load_data_from_csv(csv_file):
                 insert_data(conn, data)
@@ -82,15 +82,13 @@ def perform_experiment(conn, csv_dir_path):
 
 def main():
     time.sleep(5)
-    print("Waited for 5 seconds. Proceeding...")
     conn = create_connection()
 
     try:
         for csv_dir_path in CSV_DIR_PATHS:
-            print(f"Starting experiment for CSV directory: {csv_dir_path}")
             perform_experiment(conn, csv_dir_path)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Error: {e}")
     finally:
         conn.close()
         print("Database connection closed.")

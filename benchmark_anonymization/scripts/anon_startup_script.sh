@@ -18,9 +18,3 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Clone the repository
 git clone https://github.com/ingastrelnikova/evaluation.git /home/ingastrelnikova28/app
 
-# Wait for DB/Load Generator VM to be ready and get its IP
-sleep 60
-
-## Run Docker Compose
-#cd /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics
-#sudo docker-compose up -d

@@ -16,7 +16,3 @@ cd $GITHUB_REPO_DIR
 sudo docker-compose pull
 sudo docker-compose up -d
 
-# Wait for the load generator to finish
-sleep 3600
-
-echo "Experiment setup and execution completed."

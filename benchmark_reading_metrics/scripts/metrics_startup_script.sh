@@ -24,6 +24,3 @@ DB_LOADGEN_VM_INTERNAL_IP=$(gcloud compute instances describe db-load-vm --zone=
 
 export DB_HOST=$DB_LOADGEN_VM_INTERNAL_IP
 
-## Run Docker Compose
-#cd /home/ingastrelnikova28/app/benchmark_reading_metrics/metrics
-#sudo docker-compose up -d

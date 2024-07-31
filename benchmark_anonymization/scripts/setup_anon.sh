@@ -27,14 +27,8 @@ SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
 SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
 EOF
 
-# Verify the .env file contents (for debugging)
-cat .env
-
 
 # Pull Docker images and start services with Docker Compose
 sudo docker-compose pull
 sudo docker-compose up -d
 
-sleep 3600
-
-echo "Anonymization service setup and execution completed."

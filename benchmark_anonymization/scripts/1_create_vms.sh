@@ -12,7 +12,6 @@ DB_STARTUP_SCRIPT="db_startup_script.sh"
 ANON_STARTUP_SCRIPT="anon_startup_script.sh"
 
 
-
 # Create DB VM
 gcloud compute instances create $ANON_SERVICE_VM_NAME \
   --project=$PROJECT_ID \
@@ -39,13 +38,13 @@ echo "VMs $DB and $ANON_SERVICE_VM_NAME created."
 sleep 60
 
 
-# Create a firewall rule to allow traffic on port 5432
-#gcloud compute firewall-rules create allow-postgres-access \
-#    --direction=INGRESS \
-#    --priority=1000 \
-#    --network=default \
-#    --action=ALLOW \
-#    --rules=tcp:5432 \
-#    --source-ranges=$METRICS_VM_INTERNAL_IP/32
+ Create a firewall rule to allow traffic on port 5432
+gcloud compute firewall-rules create allow-postgres-access \
+    --direction=INGRESS \
+    --priority=1000 \
+    --network=default \
+    --action=ALLOW \
+    --rules=tcp:5432 \
+    --source-ranges=$METRICS_VM_INTERNAL_IP/32
 
-#echo "Firewall rule created to allow traffic on port 5432 from $METRICS_VM_INTERNAL_IP"
+echo "Firewall rule created to allow traffic on port 5432 from $METRICS_VM_INTERNAL_IP"

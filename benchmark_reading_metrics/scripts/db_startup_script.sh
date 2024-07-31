@@ -18,6 +18,3 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Clone the repository
 git clone https://github.com/ingastrelnikova/evaluation.git /home/ingastrelnikova28/app
 
-## Run Docker Compose
-#cd /home/ingastrelnikova28/app/benchmark_reading_metrics/data
-#sudo docker-compose up -d
