@@ -1,8 +1,8 @@
 #!/bin/bash
 
-URL="http://research-service:3002/data"
+URL="http://localhost:3002/data"
 
 while true; do
-    curl -s $URL
+    curl $URL
     sleep 15
 done
