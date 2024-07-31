@@ -7,7 +7,7 @@ from glob import glob
 import pandas as pd
 
 # Environment variables
-DB_HOST = os.getenv('DB_HOST', 'research')
+DB_HOST = os.getenv('DB_HOST', 'research-db')
 DB_PORT = os.getenv('DB_PORT', '5432')
 DB_NAME = os.getenv('DB_NAME', 'research')
 DB_USER = os.getenv('DB_USER', 'test')
