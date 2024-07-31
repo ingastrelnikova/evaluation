@@ -14,7 +14,7 @@ cd $GITHUB_REPO_DIR
 
 # Pull Docker images and start services with Docker Compose
 sudo docker-compose pull
-sudo docker-compose up
+sudo docker-compose up --build
 
 cd /home/ingastrelnikova28/app/benchmark_access_control/scripts
 
