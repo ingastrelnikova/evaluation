@@ -65,6 +65,7 @@ def load_data_from_csv(csv_file_path):
             )
 
 def perform_experiment(conn, csv_dir_path):
+    for i in range(5):  # Repeat  times
         csv_files = sorted(glob(os.path.join(csv_dir_path, '*.csv')))
         print(f"Found CSV files: {csv_files}")
         for csv_file in csv_files:
@@ -73,8 +74,8 @@ def perform_experiment(conn, csv_dir_path):
 
             # Fetch inserted ids
             inserted_ids = fetch_inserted_ids(conn)
-            half_count = len(inserted_ids) // 2
-            ids_to_delete = random.sample(inserted_ids, half_count)
+            quarter = len(inserted_ids) // 4
+            ids_to_delete = random.sample(inserted_ids, quarter)
 
             # Perform deletion
             delete_data(conn, ids_to_delete)
