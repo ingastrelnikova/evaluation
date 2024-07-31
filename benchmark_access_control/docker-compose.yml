@@ -1,0 +1,78 @@
+services:
+
+  research-db:
+    image: postgres:latest
+    container_name: research-db
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: research
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./ResearchPostgres:/docker-entrypoint-initdb.d
+    networks:
+      - hospital-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d research"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  loadgen:
+    build:
+      context: ./load
+      dockerfile: Dockerfile
+    depends_on:
+      - research-db
+    networks:
+      - hospital-network
+
+  metrics_collector:
+      build:
+        context: ./MetricsComputationService
+        dockerfile: Dockerfile
+      environment:
+        DB_NAME: research
+        DB_USER: test
+        DB_PASSWORD: test
+        DB_HOST: research-db
+        DB_PORT: 5432
+      networks:
+        - hospital-network
+      depends_on:
+        - research-db
+
+  prometheus:
+      image: prom/prometheus:latest
+      ports:
+        - "9091:9090"
+      volumes:
+        - ./MetricsComputationService/prometheus.yml:/etc/prometheus/prometheus.yml
+      networks:
+        - hospital-network
+
+
+  research-service:
+    build:
+      context: ./ResearchService
+    ports:
+      - "3002:3002"
+    depends_on:
+      - research-db
+      - opa
+    networks:
+      - hospital-network
+
+  opa:
+    build:
+      context: ./AccessControlGateway/opa
+      dockerfile: Dockerfile
+    ports:
+      - "8181:8181"
+    networks:
+      - hospital-network
+
+networks:
+  hospital-network:
+    driver: bridge
