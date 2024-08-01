@@ -42,6 +42,7 @@ The following commands were used:
   ```bash
   docker cp $(docker ps -aqf "name=anonymization-service"):app/anonymization_log.csv /home/$USER/app
   ```
+The the same experiments of sending requests were repeated 3 times and 3 datasets with the results were then analyzed.
 
 5. **Analyze the results**
 
