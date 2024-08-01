@@ -1,5 +1,0 @@
-psycopg2-binary
-pandas
-matplotlib
-prometheus_client>=0.11.0
-python-dotenv
