@@ -19,9 +19,9 @@ After the virtual machines are set up, the metrics computation service and the d
   
    ```bash
    chmod +x 2_run_metrics.sh
-   chmod +x 3_run_db.sh
+   chmod +x 2_run_db.sh
    ./2_run_metrics.sh
-   ./3_run_db.sh
+   ./2_run_db.sh
   ```
 
 4. **Download the results**
