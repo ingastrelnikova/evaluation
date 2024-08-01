@@ -65,7 +65,7 @@ def load_data_from_csv(csv_file_path):
             )
 
 def perform_experiment(conn, csv_dir_path):
-    for i in range(5):  # Repeat  times
+    for i in range(5):  # Repeat 5 times
         csv_files = sorted(glob(os.path.join(csv_dir_path, '*.csv')))
         print(f"Found CSVs: {csv_files}")
         for csv_file in csv_files:
