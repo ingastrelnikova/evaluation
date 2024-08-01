@@ -29,7 +29,7 @@ The results were downloaded manually, by connecting to the virtual machine with 
 The following commands were used:
 
   ```bash
-  docker cp $(docker ps -aqf "name=loadgen"):app/write_log.csv /home/$USER/app
+  docker cp $(docker ps -aqf "name=loadgen"):app/read_log.csv /home/$USER/app
   ```
 
 5. **Analyze the results**
