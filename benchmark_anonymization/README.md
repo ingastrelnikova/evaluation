@@ -19,9 +19,9 @@ After the virtual machines are set up, the anonymization service and the databas
   
    ```bash
    chmod +x 2_run_anon.sh
-   chmod +x 3_run_db.sh
+   chmod +x 2_run_db.sh
    ./2_run_anon.sh
-   ./3_run_db.sh
+   ./2_run_db.sh
   ```
 
 3. **Set up the anonymization service and the database**
@@ -30,8 +30,8 @@ The sending of anonymization requests has to be started.
 
    ```bash
    cd scripts
-   chmod +x 1_create_vms.sh
-   ./1_create_vms.sh
+   chmod +x 3_send_requests.sh
+   ./3_send_requests.sh
    ```
 4. **Download the results**
 
